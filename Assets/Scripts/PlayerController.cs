@@ -5,21 +5,29 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //Components
     Rigidbody2D rb;
     Animator animator;
     SpriteRenderer playerSprite;
+    GameManager gameManager;
+
+    [Header("Variables")]
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpForce = 5f;
     [SerializeField] float fallMultiplyer;
+
+
     Vector2 vectorGravity;
     public bool isOnGround = false;
     bool isJumping;
     bool secondJump = false;
+    bool isCheckPoint = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerSprite = GetComponent<SpriteRenderer>();
+        gameManager = GameManager.Instance;
         vectorGravity = new Vector2(0, -Physics2D.gravity.y);
     }
 
@@ -73,6 +81,7 @@ public class PlayerController : MonoBehaviour
         }
         JumpAnimation();
         FallAnimation();
+
     }
 
     void Jump()
@@ -86,6 +95,19 @@ public class PlayerController : MonoBehaviour
         {
             jumpForce = 10f;
             isOnGround = true;
+        }
+        if(collision.gameObject.CompareTag("CheckPoint"))
+        {
+            isCheckPoint = true;
+            GameObject collisionObj = collision.gameObject;
+            FlagAnimation(collisionObj);
+            StartCoroutine(FlagCoroutine());
+            FlagAnimation(collisionObj);
+        }
+        if(collision.gameObject.CompareTag("Collectible"))
+        {
+            gameManager.AddScore(collision.gameObject.name.ToString());
+            Destroy(collision.gameObject);
         }
     }
     void RunAnimation(float input)
@@ -105,5 +127,16 @@ public class PlayerController : MonoBehaviour
     void FallAnimation()
     {
         animator.SetFloat("yVelocity", rb.velocity.y);
+    }
+
+    IEnumerator FlagCoroutine()
+    {
+        yield return new WaitForSeconds(2.4f);
+        isCheckPoint = false;
+    }
+
+    void FlagAnimation(GameObject flag)
+    {
+        flag.GetComponent<Animator>().SetBool("IsReachedEnd", isCheckPoint);
     }
 }
