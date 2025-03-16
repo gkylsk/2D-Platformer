@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     bool isJumping;
     bool secondJump = false;
     bool isCheckPoint = false;
+    public bool isHit = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -38,13 +40,22 @@ public class PlayerController : MonoBehaviour
 
     void PlayerMovement()
     {
+        PlayerRun();
+        PlayerJump();
+
+        FallAnimation();
+
+    }
+
+    void PlayerRun()
+    {
         float horizontalInput = Input.GetAxis("Horizontal");
 
         transform.Translate(Vector2.right * horizontalInput * Time.deltaTime * speed);
 
         RunAnimation(horizontalInput);
 
-        if(horizontalInput < 0)
+        if (horizontalInput < 0)
         {
             playerSprite.flipX = true;
         }
@@ -52,8 +63,11 @@ public class PlayerController : MonoBehaviour
         {
             playerSprite.flipX = false;
         }
+    }
 
-        if(isOnGround)
+    void PlayerJump()
+    {
+        if (isOnGround)
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
@@ -80,14 +94,32 @@ public class PlayerController : MonoBehaviour
             rb.velocity -= vectorGravity * fallMultiplyer * Time.deltaTime;
         }
         JumpAnimation();
-        FallAnimation();
-
     }
 
     void Jump()
     {
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isOnGround = false;
+    }
+
+    public void Hit()
+    {
+        isHit = true;
+        rb.AddForce(Vector2.left);
+        HealthManager.health--;
+        if (HealthManager.health <= 0 )
+        {
+            Debug.Log("Game Over");
+        }
+        StartCoroutine(GetHit());
+        
+    }
+    IEnumerator GetHit()
+    {
+        HitAnimation();
+        yield return new WaitForSeconds(3);
+        isHit = false;
+        HitAnimation();
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -100,6 +132,7 @@ public class PlayerController : MonoBehaviour
         {
             isCheckPoint = true;
             GameObject collisionObj = collision.gameObject;
+            Debug.Log("Level Won");
             FlagAnimation(collisionObj);
             StartCoroutine(FlagCoroutine());
             FlagAnimation(collisionObj);
@@ -129,6 +162,11 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("yVelocity", rb.velocity.y);
     }
 
+    void HitAnimation()
+    {
+        Debug.Log(isHit);
+        animator.SetBool("isHit", isHit);
+    }
     IEnumerator FlagCoroutine()
     {
         yield return new WaitForSeconds(2.4f);
