@@ -30,4 +30,9 @@ public class HealthManager : MonoBehaviour
             hearts[i].sprite = fullHealth;
         }
     }
+
+    public static void ResetHealth()
+    {
+        health = 3;
+    }
 }

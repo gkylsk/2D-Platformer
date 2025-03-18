@@ -21,24 +21,7 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
-    [Header("Main Menu")]
-    [SerializeField] GameObject mainMenuScreen;
-    [SerializeField] Text levelText;
-    AudioSource audioSource;
-
-    [Header("Loading")]
-    [SerializeField] GameObject loadingScreen;
-
-    [Header("InGame")]
-    [SerializeField] GameObject inGameScreen;
-    public Collectibles[] collectibles;
-
-    [SerializeField] Text scoreText;
-
-    //score
-    int Score = 0;
     public int level = 1;
-    public bool music;
     private void Awake()
     {
         if(Instance != null)
@@ -50,74 +33,13 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-
-        levelText.text = level.ToString();
         LoadLevel();
-        for (int i = 0; i < collectibles.Length; i++)
-        {
-            collectibles[i].name = collectibles[i].collectible.name;
-        }
-        DisplayScore();
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    public void StartGame()
-    {
-        mainMenuScreen.SetActive(false);
-        StartCoroutine(LoadingScren());
-        LoadLevel(level);
-        inGameScreen.SetActive(true);
-    }
-
-    public void Exit()
-    {
-#if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-#else
-        Application.Quit();
-#endif
-    }
-
-    public void MainMenu()
-    {
-        inGameScreen.SetActive(false);
-        StartCoroutine(LoadingScren());
-        mainMenuScreen.SetActive(true);
-    }
-
-    IEnumerator LoadingScren()
-    {
-        loadingScreen.SetActive(true);
-        yield return new WaitForSeconds(5f);
-        loadingScreen.SetActive(false);
-    }
-
-    void LoadLevel(int level)
-    {
-        string levelName = "Level" + level;
-        SceneManager.LoadScene(levelName);
-    }
-    public void AddScore(string collectibleName)
-    {
-        for (int i = 0; i < collectibles.Length; i++)
-        {
-            if (collectibleName == collectibles[i].name)
-            {
-                Score += collectibles[i].collectibleValue;
-                DisplayScore();
-            }
-        }
-    }
-
-    void DisplayScore()
-    {
-        scoreText.text = "Score:" + Score;
     }
 
 
@@ -133,8 +55,8 @@ public class GameManager : MonoBehaviour
     {
         SaveData data = new SaveData();
         data.level = level;
-        data.music = music;
-        data.volume = audioSource.volume;
+        data.music = SoundManager.Instance.music;
+        data.volume = SoundManager.Instance.volume;
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(Application.dataPath + "/saveFile.json", json);
@@ -148,8 +70,8 @@ public class GameManager : MonoBehaviour
             string json = File.ReadAllText(path);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
             level = data.level;
-            music = data.music;
-            audioSource.volume = data.volume;
+            SoundManager.Instance.music = data.music;
+            SoundManager.Instance.volume = data.volume;
         }
     }
 }

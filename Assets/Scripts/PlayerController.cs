@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     Animator animator;
     SpriteRenderer playerSprite;
     GameManager gameManager;
+    LevelManager levelManager;
 
     [Header("Variables")]
     [SerializeField] float speed = 10f;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         playerSprite = GetComponent<SpriteRenderer>();
+        levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         gameManager = GameManager.Instance;
         vectorGravity = new Vector2(0, -Physics2D.gravity.y);
     }
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour
     {
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isOnGround = false;
+        PlaySound("Jump");
     }
 
     public void Hit()
@@ -109,10 +112,11 @@ public class PlayerController : MonoBehaviour
         HealthManager.health--;
         if (HealthManager.health <= 0 )
         {
-            Debug.Log("Game Over");
+            PlaySound("GameOver");
+            levelManager.DisplayGameOver();
         }
         StartCoroutine(GetHit());
-        
+        PlaySound("Hit");
     }
     IEnumerator GetHit()
     {
@@ -130,16 +134,18 @@ public class PlayerController : MonoBehaviour
         }
         if(collision.gameObject.CompareTag("CheckPoint"))
         {
+            PlaySound("CheckPoint");
             isCheckPoint = true;
             GameObject collisionObj = collision.gameObject;
-            Debug.Log("Level Won");
             FlagAnimation(collisionObj);
             StartCoroutine(FlagCoroutine());
             FlagAnimation(collisionObj);
+            levelManager.LevelWon();
         }
         if(collision.gameObject.CompareTag("Collectible"))
         {
-            gameManager.AddScore(collision.gameObject.name.ToString());
+            PlaySound("Collect");
+            levelManager.AddScore(collision.gameObject.name.ToString());
             Destroy(collision.gameObject);
         }
     }
@@ -164,7 +170,6 @@ public class PlayerController : MonoBehaviour
 
     void HitAnimation()
     {
-        Debug.Log(isHit);
         animator.SetBool("isHit", isHit);
     }
     IEnumerator FlagCoroutine()
@@ -176,5 +181,10 @@ public class PlayerController : MonoBehaviour
     void FlagAnimation(GameObject flag)
     {
         flag.GetComponent<Animator>().SetBool("IsReachedEnd", isCheckPoint);
+    }
+
+    void PlaySound(string soundName)
+    {
+        SoundManager.Play(soundName);
     }
 }

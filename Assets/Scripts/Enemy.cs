@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
         if(transform.position == nextPosition)
         {
             nextPosition = (nextPosition == pointA.position) ? pointB.position : pointA.position;
+            enemySprite.flipX = (nextPosition == pointA.position) ? false : true;
         }
 
     }
@@ -33,7 +34,6 @@ public class Enemy : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player dead");
             collision.gameObject.GetComponent<PlayerController>().Hit();
             if (transform.position == nextPosition)
             {
