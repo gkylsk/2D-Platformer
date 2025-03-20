@@ -7,14 +7,20 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("Main Menu")]
-    [SerializeField] GameObject mainMenuScreen;
+    [SerializeField] Button[] levelButtons;
     [SerializeField] Text levelText;
     
-    private GameManager gameManager;
+    GameManager gameManager;
+
+    private void Awake()
+    {
+        
+    }
     void Start()
     {
         gameManager = GameManager.Instance;
+        InitializeLevelButtons();
+        levelText.text = gameManager.level.ToString();
     }
 
     // Update is called once per frame
@@ -25,11 +31,22 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        mainMenuScreen.SetActive(false);
-        LoadLevel(gameManager.level);
+        OpenLevel(gameManager.level);
     }
 
-    void LoadLevel(int level)
+    void InitializeLevelButtons()
+    {
+        int unloacked = gameManager.level;
+        for(int i = 0; i < levelButtons.Length; i++)
+        {
+            levelButtons[i].interactable = false;
+        }
+        for(int i = 0; i < unloacked; i++)
+        {
+            levelButtons[i].interactable = true;
+        }
+    }
+    public void OpenLevel(int level)
     {
         string levelName = "Level" + level;
         SceneManager.LoadScene(levelName);

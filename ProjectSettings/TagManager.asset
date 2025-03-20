@@ -8,6 +8,14 @@ TagManager:
   - CheckPoint
   - Collectible
   - Enemy
+  - Platform
+  - Spike
+  - Fan
+  - Fire
+  - Trampoline
+  - Saw
+  - Heart
+  - SpeedBoost
   layers:
   - Default
   - TransparentFX

@@ -14,12 +14,13 @@ public class LevelManager : MonoBehaviour
     [SerializeField] GameObject levelWonScreen;
     [SerializeField] Text scoreText;
     public Collectibles[] collectibles;
-
+    [SerializeField] int curentLevel;
     GameManager gameManager;
 
     int Score = 0;
     void Start()
     {
+        Reset();
         gameManager = GameManager.Instance;
         for (int i = 0; i < collectibles.Length; i++)
         {
@@ -32,7 +33,7 @@ public class LevelManager : MonoBehaviour
     {
         for (int i = 0; i < collectibles.Length; i++)
         {
-            if (collectibleName == collectibles[i].name)
+            if (collectibleName.Contains(collectibles[i].name))
             {
                 Score += collectibles[i].collectibleValue;
                 DisplayScore();
@@ -54,11 +55,26 @@ public class LevelManager : MonoBehaviour
     public void LevelWon()
     {
         levelWonScreen.SetActive(true);
+        if (curentLevel == gameManager.level)
+        {
+            gameManager.level++;
+        }
+        gameManager.SaveLevel();
     }
     public void Restart()
     {
-        Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        HealthManager.ResetHealth();
+    }
+
+    private void Reset()
+    {
+        Time.timeScale = 1;
         HealthManager.ResetHealth();
     }
     public void Exit()

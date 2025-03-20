@@ -17,14 +17,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpForce = 5f;
     [SerializeField] float fallMultiplyer;
+    [SerializeField] float speedMultiplyer = 1f;
 
 
     Vector2 vectorGravity;
     public bool isOnGround = false;
     bool isJumping;
     bool secondJump = false;
-    bool isCheckPoint = false;
     public bool isHit = false;
+    float yBound = -6f;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -33,10 +34,20 @@ public class PlayerController : MonoBehaviour
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         gameManager = GameManager.Instance;
         vectorGravity = new Vector2(0, -Physics2D.gravity.y);
+        //gameManager.isGameStarted = true;
     }
 
     void Update()
     {
+        //if(gameManager.isGameStarted)
+        //{
+        //    Appear();
+        //    gameManager.isGameStarted = false;
+        //}
+        if(transform.position.y < yBound)
+        {
+            GameOver();
+        }
         PlayerMovement();
     }
 
@@ -53,7 +64,7 @@ public class PlayerController : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
 
-        transform.Translate(Vector2.right * horizontalInput * Time.deltaTime * speed);
+        transform.Translate(Vector2.right * horizontalInput * Time.deltaTime * speed * speedMultiplyer);
 
         RunAnimation(horizontalInput);
 
@@ -112,8 +123,7 @@ public class PlayerController : MonoBehaviour
         HealthManager.health--;
         if (HealthManager.health <= 0 )
         {
-            PlaySound("GameOver");
-            levelManager.DisplayGameOver();
+            GameOver();
         }
         StartCoroutine(GetHit());
         PlaySound("Hit");
@@ -132,22 +142,45 @@ public class PlayerController : MonoBehaviour
             jumpForce = 10f;
             isOnGround = true;
         }
-        if(collision.gameObject.CompareTag("CheckPoint"))
-        {
-            PlaySound("CheckPoint");
-            isCheckPoint = true;
-            GameObject collisionObj = collision.gameObject;
-            FlagAnimation(collisionObj);
-            StartCoroutine(FlagCoroutine());
-            FlagAnimation(collisionObj);
-            levelManager.LevelWon();
-        }
         if(collision.gameObject.CompareTag("Collectible"))
         {
             PlaySound("Collect");
             levelManager.AddScore(collision.gameObject.name.ToString());
             Destroy(collision.gameObject);
         }
+        if(collision.gameObject.CompareTag("Spike"))
+        {
+            GameOver();
+        }
+        if (collision.gameObject.CompareTag("Saw"))
+        {
+            Hit();
+        }
+        if(collision.gameObject.CompareTag("Heart"))
+        {
+            PlaySound("Collect");
+            HealthManager.health++;
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.CompareTag("SpeedBoost"))
+        {
+            StartCoroutine(SpeedBoost());
+            Destroy(collision.gameObject);
+        }
+    }
+
+    public void GameOver()
+    {
+        HealthManager.health = 0;
+        PlaySound("GameOver");
+        levelManager.DisplayGameOver();
+    }
+
+    IEnumerator SpeedBoost()
+    {
+        speedMultiplyer = 2f;
+        yield return new WaitForSeconds(5f);
+        speedMultiplyer = 1f;
     }
     void RunAnimation(float input)
     {
@@ -172,17 +205,22 @@ public class PlayerController : MonoBehaviour
     {
         animator.SetBool("isHit", isHit);
     }
-    IEnumerator FlagCoroutine()
-    {
-        yield return new WaitForSeconds(2.4f);
-        isCheckPoint = false;
-    }
 
-    void FlagAnimation(GameObject flag)
+    IEnumerator Appear()
     {
-        flag.GetComponent<Animator>().SetBool("IsReachedEnd", isCheckPoint);
+        AppearingAnimation();
+        yield return new WaitForSeconds(0.5f);
+        isHit = false;
+        AppearingAnimation();
     }
-
+    void AppearingAnimation()
+    {
+        animator.SetBool("appear", gameManager.isGameStarted);
+    }
+    void DisappearingAnimation()
+    {
+        animator.SetBool("disaapear", true);
+    }
     void PlaySound(string soundName)
     {
         SoundManager.Play(soundName);

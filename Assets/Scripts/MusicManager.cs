@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MusicManager : MonoBehaviour
 {
-    public static SoundManager soundManager;
+    SoundManager soundManager;
     [SerializeField] Slider slider;
 
     [SerializeField] GameObject musicOn;
@@ -17,6 +17,7 @@ public class MusicManager : MonoBehaviour
         slider.onValueChanged.AddListener(delegate { SetVolumeSlider(); });
         GameManager.Instance.LoadLevel();
         SetSlider();
+        SetMusic();
     }
 
     void Update()
@@ -33,6 +34,18 @@ public class MusicManager : MonoBehaviour
     public void SetSlider()
     {
         slider.value = soundManager.volume;
+    }
+
+    void SetMusic()
+    {
+        if(soundManager.music)
+        {
+            PlayMusic();
+        }
+        else
+        {
+            StopMusic();
+        }
     }
     public void PlayMusic()
     {

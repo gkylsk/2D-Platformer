@@ -14,14 +14,17 @@ public class SoundManager : MonoBehaviour
     public bool music;
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            audioSource = GetComponent<AudioSource>();
+            soundEffectLibrary = GetComponent<SoundEffectLibrary>();
+        }
+        else
         {
             Destroy(gameObject);
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-        audioSource = GetComponent<AudioSource>();
-        soundEffectLibrary = GetComponent<SoundEffectLibrary>();
     }
     void Start()
     {
@@ -33,7 +36,7 @@ public class SoundManager : MonoBehaviour
         AudioClip clip = soundEffectLibrary.GetAudioClip(name);
         if (clip != null)
         {
-            audioSource.PlayOneShot(clip, 5f);
+            audioSource.PlayOneShot(clip, 2f);
         }
     }
     public void SetVolume()
