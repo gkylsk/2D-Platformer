@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,25 +10,25 @@ public class HealthManager : MonoBehaviour
     [SerializeField] Sprite fullHealth;
     [SerializeField] Sprite halfHealth;
     [SerializeField] Sprite emptyHealth;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        foreach(Image img in  hearts)
+        SetHealthSprite();
+    }
+
+    void SetHealthSprite()
+    {
+        //set all heart as empty sprite
+        foreach (Image img in hearts)
         {
             img.sprite = emptyHealth;
         }
-        for(int i = 0; i < health; i++)
+        //set the full heaart sprite based on health
+        for (int i = 0; i < health; i++)
         {
             hearts[i].sprite = fullHealth;
         }
     }
-
     public static void ResetHealth()
     {
         health = 3;

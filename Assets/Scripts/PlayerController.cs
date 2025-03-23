@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float speed = 10f;
     [SerializeField] float jumpForce = 5f;
     [SerializeField] float fallMultiplyer;
-    [SerializeField] float speedMultiplyer = 1f;
+    public float speedMultiplyer = 1f;
 
 
     Vector2 vectorGravity;
@@ -34,16 +34,20 @@ public class PlayerController : MonoBehaviour
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         gameManager = GameManager.Instance;
         vectorGravity = new Vector2(0, -Physics2D.gravity.y);
-        //gameManager.isGameStarted = true;
     }
 
+    private void OnEnable()
+    {
+        HealthItem.OnHealthCollect += Heal;
+        SpeedBoostItem.OnSpeedCollect += SpeedBoost;
+    }
+    private void OnDestroy()
+    {
+        HealthItem.OnHealthCollect -= Heal;
+        SpeedBoostItem.OnSpeedCollect -= SpeedBoost;
+    }
     void Update()
     {
-        //if(gameManager.isGameStarted)
-        //{
-        //    Appear();
-        //    gameManager.isGameStarted = false;
-        //}
         if(transform.position.y < yBound)
         {
             GameOver();
@@ -62,20 +66,15 @@ public class PlayerController : MonoBehaviour
 
     void PlayerRun()
     {
+        //player movement based on left and right arrow key
         float horizontalInput = Input.GetAxis("Horizontal");
-
         transform.Translate(Vector2.right * horizontalInput * Time.deltaTime * speed * speedMultiplyer);
 
+        //player run animation based on player input
         RunAnimation(horizontalInput);
 
-        if (horizontalInput < 0)
-        {
-            playerSprite.flipX = true;
-        }
-        else
-        {
-            playerSprite.flipX = false;
-        }
+        //flip the player sprite in direction of movement
+        playerSprite.flipX = horizontalInput < 0 ? true : false;
     }
 
     void PlayerJump()
@@ -104,7 +103,7 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = false;
             DoubleJumpAnimation(false);
-            rb.velocity -= vectorGravity * fallMultiplyer * Time.deltaTime;
+            rb.velocity -= vectorGravity * fallMultiplyer * Time.deltaTime;  // fall on the grond smothly
         }
         JumpAnimation();
     }
@@ -120,13 +119,38 @@ public class PlayerController : MonoBehaviour
     {
         isHit = true;
         rb.AddForce(Vector2.left);
+        ReduceHealth();
+        StartCoroutine(GetHit());
+        PlaySound("Hit");
+    }
+
+    void ReduceHealth()
+    {
         HealthManager.health--;
-        if (HealthManager.health <= 0 )
+        if (HealthManager.health <= 0)
         {
             GameOver();
         }
-        StartCoroutine(GetHit());
-        PlaySound("Hit");
+    }
+
+    void Heal(int amount)
+    {
+        if (HealthManager.health < 0)
+        {
+            HealthManager.health += amount;
+        }
+    }
+
+    void SpeedBoost(float multiplyer)
+    {
+        StartCoroutine(SpeedBoostPowerup(multiplyer));
+    }
+
+    IEnumerator SpeedBoostPowerup(float multiplyer)
+    {
+        speedMultiplyer = multiplyer;
+        yield return new WaitForSeconds(5f);
+        speedMultiplyer = 1f;
     }
     IEnumerator GetHit()
     {
@@ -135,37 +159,13 @@ public class PlayerController : MonoBehaviour
         isHit = false;
         HitAnimation();
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             jumpForce = 10f;
             isOnGround = true;
-        }
-        if(collision.gameObject.CompareTag("Collectible"))
-        {
-            PlaySound("Collect");
-            levelManager.AddScore(collision.gameObject.name.ToString());
-            Destroy(collision.gameObject);
-        }
-        if(collision.gameObject.CompareTag("Spike"))
-        {
-            GameOver();
-        }
-        if (collision.gameObject.CompareTag("Saw"))
-        {
-            Hit();
-        }
-        if(collision.gameObject.CompareTag("Heart"))
-        {
-            PlaySound("Collect");
-            HealthManager.health++;
-            Destroy(collision.gameObject);
-        }
-        if (collision.gameObject.CompareTag("SpeedBoost"))
-        {
-            StartCoroutine(SpeedBoost());
-            Destroy(collision.gameObject);
         }
     }
 
@@ -176,12 +176,7 @@ public class PlayerController : MonoBehaviour
         levelManager.DisplayGameOver();
     }
 
-    IEnumerator SpeedBoost()
-    {
-        speedMultiplyer = 2f;
-        yield return new WaitForSeconds(5f);
-        speedMultiplyer = 1f;
-    }
+    #region Animations
     void RunAnimation(float input)
     {
         animator.SetFloat("speed", Mathf.Abs(input));
@@ -215,12 +210,14 @@ public class PlayerController : MonoBehaviour
     }
     void AppearingAnimation()
     {
-        animator.SetBool("appear", gameManager.isGameStarted);
+        animator.SetBool("appear", true);
     }
     void DisappearingAnimation()
     {
         animator.SetBool("disaapear", true);
     }
+
+    #endregion
     void PlaySound(string soundName)
     {
         SoundManager.Play(soundName);

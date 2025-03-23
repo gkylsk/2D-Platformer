@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Platforms : MonoBehaviour
@@ -7,22 +5,22 @@ public class Platforms : MonoBehaviour
     [SerializeField] Transform pointA;
     [SerializeField] Transform pointB;
 
-    private Vector3 nextPosition;
+    private Vector3 destination;
     public float speed = 2f;
 
     void Start()
     {
-        nextPosition = pointB.position;
+        destination = pointB.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nextPosition, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
 
-        if (transform.position == nextPosition)
+        if (transform.position == destination)
         {
-            nextPosition = (nextPosition == pointA.position) ? pointB.position : pointA.position;
+            destination = (destination == pointA.position) ? pointB.position : pointA.position;
         }
     }
 

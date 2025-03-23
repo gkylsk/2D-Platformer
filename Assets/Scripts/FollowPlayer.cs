@@ -27,7 +27,9 @@ public class FollowPlayer : MonoBehaviour
     void LateUpdate()
     {
         Vector3 targetPosition = target.position + offset;
+        //clamp the x and y position of the camera to avoid going out of bounds
         targetPosition = new Vector3(Mathf.Clamp(targetPosition.x, xLimit.x, xLimit.y), Mathf.Clamp(targetPosition.y, yLimit.x, yLimit.y), targetPosition.z);
+        //smooth tranisition of camera
         transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
     }
 }

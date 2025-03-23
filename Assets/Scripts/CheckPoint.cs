@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckPoint : MonoBehaviour
@@ -17,12 +16,12 @@ public class CheckPoint : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            //disable player movement
             collision.gameObject.GetComponent<PlayerController>().enabled = false;
+
             SoundManager.Play("CheckPoint");
-            isCheckPoint = true;
-            FlagAnimation();
-            StartCoroutine(FlagCoroutine());
-            FlagAnimation();
+            InitiateAnimation();
+
             levelManager.LevelWon();
         }
     }
@@ -33,6 +32,14 @@ public class CheckPoint : MonoBehaviour
         isCheckPoint = false;
     }
 
+    void InitiateAnimation()
+    {
+        isCheckPoint = true;
+        //flag animation for checkpoint
+        FlagAnimation();
+        StartCoroutine(FlagCoroutine());
+        FlagAnimation();
+    }
     void FlagAnimation()
     {
         animator.SetBool("IsReachedEnd", isCheckPoint);

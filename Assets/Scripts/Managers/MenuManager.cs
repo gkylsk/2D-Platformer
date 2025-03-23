@@ -23,12 +23,6 @@ public class MenuManager : MonoBehaviour
         levelText.text = gameManager.level.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void StartGame()
     {
         OpenLevel(gameManager.level);
@@ -37,10 +31,12 @@ public class MenuManager : MonoBehaviour
     void InitializeLevelButtons()
     {
         int unloacked = gameManager.level;
+        //set all buttons as non interactable
         for(int i = 0; i < levelButtons.Length; i++)
         {
             levelButtons[i].interactable = false;
         }
+        //set the level button interactable if level is unlocked
         for(int i = 0; i < unloacked; i++)
         {
             levelButtons[i].interactable = true;

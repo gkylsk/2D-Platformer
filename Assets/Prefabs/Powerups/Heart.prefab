@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5983815030312751708}
   - component: {fileID: 5983815030312751711}
   - component: {fileID: 5983815030312751710}
+  - component: {fileID: -7172841600267958687}
   m_Layer: 0
   m_Name: Heart
   m_TagString: Heart
@@ -95,7 +96,7 @@ PolygonCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -118,3 +119,15 @@ PolygonCollider2D:
       - {x: 0.3931055, y: -0.03840281}
       - {x: 0.38842726, y: 0.1979986}
       - {x: 0.19485119, y: 0.3571854}
+--- !u!114 &-7172841600267958687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5983815030312751713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b54c2155a0822249b092baec54450cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

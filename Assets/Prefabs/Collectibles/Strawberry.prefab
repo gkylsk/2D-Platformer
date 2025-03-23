@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6070925677234566003}
   - component: {fileID: 216040843984668472}
   - component: {fileID: 4495123763723187545}
+  - component: {fileID: -4252222009339938147}
   m_Layer: 0
   m_Name: Strawberry
   m_TagString: Collectible
@@ -117,9 +118,22 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.018460765, y: 0.020169914}
   m_Size: {x: 0.30386564, y: 0.4629308}
   m_Direction: 0
+--- !u!114 &-4252222009339938147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854203907237651487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2045da84c8d794ab95c43e5012760e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 40

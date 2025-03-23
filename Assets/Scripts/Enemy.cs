@@ -1,31 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    Rigidbody2D rb;
     SpriteRenderer enemySprite;
     [SerializeField] Transform pointA;
     [SerializeField] Transform pointB;
 
-    private Vector3 nextPosition;
+    private Vector3 destination;
     public float speed = 2f;
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
         enemySprite = GetComponent<SpriteRenderer>();
-        nextPosition = pointB.position;
+        destination = pointB.position;
     }
 
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nextPosition, speed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, destination, speed * Time.deltaTime);
 
-        if(transform.position == nextPosition)
+        //if the currentPosition is equal to the destination the change the destination
+        if(transform.position == destination)
         {
-            nextPosition = (nextPosition == pointA.position) ? pointB.position : pointA.position;
-            enemySprite.flipX = (nextPosition == pointA.position) ? false : true;
+            destination = (destination == pointA.position) ? pointB.position : pointA.position;
+            enemySprite.flipX = (destination == pointA.position) ? false : true;
         }
 
     }
@@ -35,9 +32,10 @@ public class Enemy : MonoBehaviour
         if(collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerController>().Hit();
-            if (transform.position == nextPosition)
+            //change destination if collided with player
+            if (transform.position == destination)
             {
-                nextPosition = (nextPosition == pointA.position) ? pointB.position : pointA.position;
+                destination = (destination == pointA.position) ? pointB.position : pointA.position;
             }
         }
     }

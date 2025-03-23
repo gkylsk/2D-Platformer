@@ -1,28 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [Serializable]
-    public struct Collectibles
-    {
-        public string name;
-        public GameObject collectible;
-        public int collectibleValue;
-    }
-
-    public static GameManager Instance;
+    public static GameManager Instance { get; private set; }
 
     public int level = 1;
-    public bool isGameStarted;
+
     private void Awake()
     {
         if (Instance == null)
@@ -40,13 +24,7 @@ public class GameManager : MonoBehaviour
         LoadLevel();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
+    #region Json Data
     [System.Serializable]
     class SaveData
     {
@@ -78,4 +56,5 @@ public class GameManager : MonoBehaviour
             SoundManager.Instance.volume = data.volume;
         }
     }
+    #endregion
 }

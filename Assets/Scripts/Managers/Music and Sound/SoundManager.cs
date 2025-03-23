@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager Instance;
+    public static SoundManager Instance {  get; private set; }
 
     private static AudioSource audioSource;
     private static SoundEffectLibrary soundEffectLibrary;
@@ -25,10 +22,6 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-    void Start()
-    {
-        
     }
 
     public static void Play(string name)

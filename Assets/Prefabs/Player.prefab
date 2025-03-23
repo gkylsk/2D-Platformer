@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 6833975403268052492}
   - component: {fileID: 6833975403268052493}
   - component: {fileID: 6833975403268052480}
+  - component: {fileID: -129546297741720183}
+  - component: {fileID: 5007560566359508690}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -150,6 +152,7 @@ MonoBehaviour:
   speed: 5
   jumpForce: 10
   fallMultiplyer: 2
+  speedMultiplyer: 1
   isOnGround: 0
   isHit: 0
 --- !u!95 &6833975403268052480
@@ -173,3 +176,31 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-129546297741720183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833975403268052490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b04780cf6587fb84e9f709367db7e5a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!58 &5007560566359508690
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6833975403268052490}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.8888889

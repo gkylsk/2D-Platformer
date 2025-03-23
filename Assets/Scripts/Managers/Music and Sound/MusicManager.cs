@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,11 +16,6 @@ public class MusicManager : MonoBehaviour
         GameManager.Instance.LoadLevel();
         SetSlider();
         SetMusic();
-    }
-
-    void Update()
-    {
-        
     }
 
     public void SetVolumeSlider()
