@@ -21,11 +21,13 @@ public class PlayerController : MonoBehaviour
 
 
     Vector2 vectorGravity;
+    Vector2 playerStartPos;
     public bool isOnGround = false;
     bool isJumping;
     bool secondJump = false;
     public bool isHit = false;
     float yBound = -6f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         gameManager = GameManager.Instance;
         vectorGravity = new Vector2(0, -Physics2D.gravity.y);
+        playerStartPos = transform.position;
     }
 
     private void OnEnable()
@@ -50,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         if(transform.position.y < yBound)
         {
-            GameOver();
+            Respawn();
         }
         PlayerMovement();
     }
@@ -169,6 +172,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Respawn()
+    {
+        transform.position = playerStartPos;
+        ReduceHealth();
+    }
     public void GameOver()
     {
         HealthManager.health = 0;

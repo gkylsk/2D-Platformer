@@ -6,6 +6,6 @@ public class Spike : Traps
 {
     protected override void TrapItem(Collision2D playerObj)
     {
-        playerObj.gameObject.GetComponent<PlayerController>().GameOver();
+        playerObj.gameObject.GetComponent<PlayerController>().Respawn();
     }
 }
