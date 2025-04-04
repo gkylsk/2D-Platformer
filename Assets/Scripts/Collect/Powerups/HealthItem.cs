@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class HealthItem : MonoBehaviour, IItem
 {
-    public static event Action<int> OnHealthCollect;
-    int healthAmount = 1;
+    public static event Action OnHealthCollect;
 
     public void Collect()
     {
-        OnHealthCollect.Invoke(healthAmount);
+        OnHealthCollect.Invoke();
         SoundManager.Play("Collect");
         Destroy(gameObject);
     }

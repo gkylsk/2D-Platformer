@@ -19,6 +19,7 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         gameManager = GameManager.Instance;
+        gameManager.LoadLevel();
         InitializeLevelButtons();
         levelText.text = gameManager.level.ToString();
     }

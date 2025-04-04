@@ -53,7 +53,7 @@ public class LevelManager : MonoBehaviour
     public void LevelWon()
     {
         levelWonScreen.SetActive(true);
-        if (curentLevel == gameManager.level)
+        if (curentLevel == gameManager.level && gameManager.level < 7)
         {
             gameManager.level++;
         }

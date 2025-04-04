@@ -136,11 +136,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Heal(int amount)
+    void Heal()
     {
-        if (HealthManager.health < 0)
+        if (HealthManager.health < 3)
         {
-            HealthManager.health += amount;
+            HealthManager.health++;
         }
     }
 
