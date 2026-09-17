@@ -5,6 +5,8 @@ In 2D Platformer player controls a character who moves from left to right, can n
 
 ![Image](https://github.com/user-attachments/assets/ba3821d3-e811-4cd1-93e7-9d52e929095b)
 
+[Play on itch.io.](https://gkylsk.itch.io/2d-platformer)
+
 ## How To Play
 Left and Right arrow keys to move the character.<br/>
 Up arrow key to jump.<br/>
